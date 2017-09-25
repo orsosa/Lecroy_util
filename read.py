@@ -1,6 +1,6 @@
 from lecroy import *
 
-DataDirectory = "/home/orsosa/Radon_Detector/Rad_Det_Cable/Todo_Soldado/"
-OutputRootFile = "/home/orsosa/Radon_Detector/Rad_Det_Cable/Todo_Soldado.root"
+DataDirectory = "/data/user/o/orsosa/lnarvaez_muones_hexagono/"
+OutputRootFile = "/data/user/o/orsosa/muon_hexagono.root"
 
 LeCroy2Root(DataDirectory, OutputRootFile)
