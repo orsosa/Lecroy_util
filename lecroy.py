@@ -18,6 +18,10 @@ def LeCroy2Root(directory, outputRootFile):
     for i in range(4-len(filesPerChannel)):
         filesPerChannel.append([0]*nMC)
 
+    #### Get time from CHANNEL n #######################
+    TimeNch=2
+    ########################################
+
     nMC = len(filesPerChannel[0]) # number of available measurement per channel
 
     # formar la tupla con las columnas necesarias:
@@ -35,10 +39,10 @@ def LeCroy2Root(directory, outputRootFile):
         for j in range(len(filesPerChannel)):
             if(filesPerChannel[j][i] == 0):
                 readingGroup.append([])
-                print "channel: " + str(j) + " empty"
+#               print "channel: " + str(j) + " empty"
             else:
-                print "channel: " + str(j) + " ok" 
-                print directory+filesPerChannel[j][i]
+#               print "channel: " + str(j) + " ok" 
+#               print directory+filesPerChannel[j][i]
                 readingGroup.append(readTrc(directory+filesPerChannel[j][i]))
 
         largos = []
@@ -56,7 +60,8 @@ def LeCroy2Root(directory, outputRootFile):
 
         # luego, generar listas a cargar a la tupla
         event = i
-        for [time,c1,c2,c3,c4] in zip(readingGroup[0][0], readingGroup[0][1], readingGroup[1][1], readingGroup[2][1], readingGroup[3][1]):
+
+        for [time,c1,c2,c3,c4] in zip(readingGroup[TimeNch-1][0], readingGroup[0][1], readingGroup[1][1], readingGroup[2][1], readingGroup[3][1]):
 
             tup.Fill(event,time,c1,c2,c3,c4)
 
