@@ -12,13 +12,13 @@ int process_data(TString name){
   TFile *f = new TFile(name,"read");
   TNtuple *t =(TNtuple *)f->Get("osc");
   TFile *fout = new TFile("out_" + name,"recreate");
-  TString varList="q1:q2:q3:q4:ev:min1:min2:min3:min4:max1:max2:max3:max4:tm1:tm2:tm3:tm4";
+  TString varList="q1:q2:q3:q4:ev:min1:min2:min3:min4:max1:max2:max3:max4:tm1:tm2:tm3:tm4:tmin1:tmin2:tmin3:tmin4:";
   //char varListTime[200]="C1:C2:C3:C4:ev:min1:min2:min3:min4:max1:max2:max3:max4:time:tm1:tm2:tm3:tm4";
   //TNtuple *tq = new TNtuple("tq","charge tuple q (nC), min (V)",varList);
   //  TNtuple *tsig = new TNtuple("tsig","signals tuple time(ns),C1... (V)",varListTime);
-  TTree *tout = new TTree("data","data processed. time (ns), C1... (V), q1... (nC)");
+  TTree *tout = new TTree("data","data processed. time (s), C1... (V), q1... (nC)");
 
-  Float_t time,tm1,tm2,tm3,tm4,c1,c2,c3,c4,evt,evt_prev,min1,min2,min3,min4,max1,max2,max3,max4,q1,q2,q3,q4,dt,hl,ll;
+  Float_t time,tm1,tm2,tm3,tm4,tmin1,tmin2,tmin3,tmin4,c1,c2,c3,c4,evt,evt_prev,min1,min2,min3,min4,max1,max2,max3,max4,q1,q2,q3,q4,dt,hl,ll;
   Float_t  *data = new Float_t[varList.CountChar(':')+1];
   //  Float_t  *data_sig = new Float_t[tsig->GetNvar()];
   t->SetMaxEntryLoop(1e5);
@@ -63,7 +63,7 @@ int process_data(TString name){
   max4 = -100000;
 
   q1=0,q2=0,q3=0,q4=0;
-  tm1=0,tm2=0,tm3=0,tm4=0;
+  tm1=0,tm2=0,tm3=0,tm4=tmin1=tmin2=tmin3=tmin4=0;
   Int_t  count=0;
   dt = time;
   t->GetEntry(1);
@@ -77,10 +77,10 @@ int process_data(TString name){
       q1+=-c1;q2+=-c2;q3+=-c3;q4+=-c4;
       tm1=-c1*time*1e9;tm2=-c2*time*1e9;tm3=-c3*time*1e9;tm4=-c4*time*1e9;
     }
-    if(min1>c1) min1 = c1;
-    if(min2>c2) min2 = c2;
-    if(min3>c3) min3 = c3;
-    if(min4>c4) min4 = c4;
+    if(min1>c1){ min1 = c1;tmin1=time;}
+    if(min2>c2){ min2 = c2;tmin2=time;}
+    if(min3>c3){ min3 = c3;tmin3=time;}
+    if(min4>c4){ min4 = c4;tmin4=time;}
 
     if(max1<c1) max1 = c1;
     if(max2<c2) max2 = c2;
@@ -116,6 +116,11 @@ int process_data(TString name){
       data[15]=tm3;
       data[16]=tm4;
 
+      data[17]=tmin1;
+      data[18]=tmin2;
+      data[19]=tmin3;
+      data[20]=tmin4;
+
       tout->Fill();
       evt_prev = evt;
 
@@ -128,7 +133,7 @@ int process_data(TString name){
       min4 =  100000;
       max4 = -100000;
       q1=0,q2=0,q3=0,q4=0;
-      tm1=0,tm2=0,tm3=0,tm4=0;
+      tm1=0,tm2=0,tm3=0,tm4=tmin1=tmin2=tmin3=tmin4=0;
       count=0;
       C1[count]=c1; C2[count]=c2; C3[count]=c3; C4[count]=c4; TIME[count++]=time;
     }
