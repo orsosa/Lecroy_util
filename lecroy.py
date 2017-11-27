@@ -19,7 +19,7 @@ def LeCroy2Root(directory, outputRootFile):
         filesPerChannel.append([0]*nMC)
 
     #### Get time from CHANNEL n #######################
-    TimeNch=2
+    TimeNch=1
     ########################################
 
     nMC = len(filesPerChannel[0]) # number of available measurement per channel
